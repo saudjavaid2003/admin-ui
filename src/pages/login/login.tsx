@@ -1,17 +1,34 @@
 import React from 'react';
-import { Layout, Card, Space, Form, Input, Checkbox, Button } from 'antd';
+import { Layout, Card, Space, Form, Input, Checkbox, Button, Alert } from 'antd';
 import { LockFilled, UserOutlined, LockOutlined } from '@ant-design/icons';
 import Logo from '../../components/icons/logo';
+import { useMutation } from '@tanstack/react-query';
+import type { Credentials } from '../../types';
+import { login } from '../../http/api';
+const LoginUser=async (credentials:Credentials)=>{
+console.log(credentials);
+const {data}=await login(credentials);
+console.log(data);
+return data;
 
+}
 const LoginPage = () => {
-  const isPending = false; // Remove or replace with your state if needed
+  
+  
+
+ const { mutate,isError,isPending, error } = useMutation({
+  mutationKey: ['login'],
+  mutationFn: LoginUser,
+  onSuccess: () => {
+    console.log("success");
+  }
+});
 
   return (
     <Layout style={{ height: '100vh', display: 'grid', placeItems: 'center' }}>
       <Space direction="vertical" align="center" size="large">
-        <Layout.Content
-          style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-        >
+
+        <Layout.Content style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Logo />
         </Layout.Content>
 
@@ -25,9 +42,21 @@ const LoginPage = () => {
             </Space>
           }
         >
-          <Form layout="vertical"    initialValues={{
-                                remember: true,
-                            }}>
+          <Form
+            layout="vertical"
+            initialValues={{ remember: true }}
+            onFinish={(values) => {
+              mutate({email:values.username,password:values.password})
+            }}
+          >
+             {isError && (
+    <Alert
+      style={{ marginBottom: 24 }}
+      type="error"
+      message={error?.message}
+    />
+  )}
+
             <Form.Item
               name="username"
               rules={[{ required: true, message: 'Please input your username' }]}
@@ -46,16 +75,16 @@ const LoginPage = () => {
               <Form.Item name="remember" valuePropName="checked" noStyle>
                 <Checkbox>Remember me</Checkbox>
               </Form.Item>
-              <a href="#" id="login-form-forgot">
-                Forgot password
-              </a>
+              <a href="#">Forgot password</a>
             </div>
 
             <Form.Item>
               <Button type="primary" htmlType="submit" style={{ width: '100%' }} loading={isPending}>
                 Log in
+          
               </Button>
             </Form.Item>
+
           </Form>
         </Card>
       </Space>
