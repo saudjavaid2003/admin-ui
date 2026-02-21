@@ -2,9 +2,12 @@ import React from 'react';
 import { Layout, Card, Space, Form, Input, Checkbox, Button, Alert } from 'antd';
 import { LockFilled, UserOutlined, LockOutlined } from '@ant-design/icons';
 import Logo from '../../components/icons/logo';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation,useQuery } from '@tanstack/react-query';
 import type { Credentials } from '../../types';
-import { login } from '../../http/api';
+import { login,self,logout} from '../../http/api';
+import { useAuthStore } from '../../store';
+import { usePermission } from '../../hooks/usePermission';
+
 const LoginUser=async (credentials:Credentials)=>{
 console.log(credentials);
 const {data}=await login(credentials);
@@ -12,15 +15,45 @@ console.log(data);
 return data;
 
 }
+  const getSelf = async () => {
+    const { data } = await self();
+    return data;
+};
 const LoginPage = () => {
+   const { isAllowed } = usePermission();
+     const { setUser, logout: logoutFromStore } = useAuthStore();
+
+  const {refetch} = useQuery({
+        queryKey: ['self'],
+        queryFn: getSelf,
+        enabled: false,
+    });
+ const { mutate: logoutMutate } = useMutation({
+        mutationKey: ['logout'],
+        mutationFn: logout,
+        onSuccess: async () => {
+            logoutFromStore();
+            return;
+        },
+    });
   
   
 
  const { mutate,isError,isPending, error } = useMutation({
   mutationKey: ['login'],
   mutationFn: LoginUser,
-  onSuccess: () => {
-    console.log("success");
+  onSuccess: async  () => {
+  // const selfDataPromise = await refetch();
+    const selfDataPromise = await refetch();
+            // logout or redirect to client ui
+            // window.location.href = "http://clientui/url"
+            // "admin", "manager", "customer"
+            if (!isAllowed(selfDataPromise.data)) {
+                logoutMutate();
+                return;
+            }
+            setUser(selfDataPromise.data);
+  // console.log(res.data);
   }
 });
 
