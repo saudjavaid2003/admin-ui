@@ -19,7 +19,7 @@ const { Sider, Header, Content, Footer } = Layout;
         {
             key:"/",
             icon:<Icon component={Home}/>,
-            label:<NavLink to="/home">Home</NavLink>
+            label:<NavLink to="/">Home</NavLink>
         },
              {
             key:"/users",

@@ -11,6 +11,7 @@ export const login = (credentials: Credentials) =>
 
 export const self = () => api.get('/auth/self');
 export const logout = () => api.post("/auth/logout");
+export const getUsers=()=> api.get("/users");
 // export const getUsers = (queryString: string) => api.get(`${AUTH_SERVICE}/users?${queryString}`);
 // export const getTenants = (queryString: string) =>
 //     api.get(`${AUTH_SERVICE}/tenants?${queryString}`);
