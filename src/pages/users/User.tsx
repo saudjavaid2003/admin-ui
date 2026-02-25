@@ -1,11 +1,20 @@
-import React from 'react'
+import { Breadcrumb } from 'antd';
+import React from 'react';
+import { RightOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom'; // ✅ FIX
 
 const User = () => {
   return (
-    <div>
-      this is user page
-    </div>
-  )
-}
+    <>
+      <Breadcrumb
+        separator={<RightOutlined />}
+        items={[
+          { title: <Link to="/dashboard">Dashboard</Link> },
+          { title: 'Users' },
+        ]}
+      />
+    </>
+  );
+};
 
-export default User
+export default User;
