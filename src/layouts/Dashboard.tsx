@@ -99,7 +99,7 @@ const Dashboard = () => {
 
     </Flex>
         </Header>
-        <Content style={{ margin: '0 16px' }}>
+        <Content style={{ margin: '24px' }}>
        <Outlet/>
         </Content>
         <Footer style={{ textAlign: 'center' }}>
