@@ -1,5 +1,5 @@
 import type { CreateTenantData, CreateUserData, Credentials, OrderStatus } from '../types';
-import  api  from './client';
+import  {api}  from './client';
 
 export const AUTH_SERVICE = '/api/auth';
 // const CATALOG_SERVICE = '/api/catalog';

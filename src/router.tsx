@@ -3,15 +3,25 @@ import HomePage from "./pages/HomePage";
 import Login from "./pages/login/login";
 import Dashboard from "./layouts/Dashboard";
 import NonAuth from "./layouts/NonAuth";
-
+import Root from "./layouts/Root"; 
+import User from "./pages/users/User";
 export const router=createBrowserRouter([
     {
         path:"/",
+        element:<Root/>,
+        children:[
+              {
+        path:"",
         element:<Dashboard/>,
         children:[
             {
                 path:"",
+                index:true,
                 element:<HomePage/>
+            },
+             {
+                path:"users",
+                element:<User/>
             }
         ]
     },
@@ -20,9 +30,13 @@ export const router=createBrowserRouter([
         element:<NonAuth/>,
         children:[
             {
-                path:"/login",
+                path:"login",
                 element:<Login/>
             }
         ]
     }
+
+        ]
+    }
+  
 ])
