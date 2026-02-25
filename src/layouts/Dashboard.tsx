@@ -79,7 +79,7 @@ const Dashboard = () => {
         <Header style={{ paddingLeft: "16px",paddingRight:"16px", background: colorBgContainer }} 
         >
              <Flex gap="middle" align="start" justify='space-between'>
-                <Badge text="Global"  color="#faad14" status='success' />
+                <Badge text={user.role=="admin"?"you are an admin":user.tenant?.name}  color="#faad14" status='success' />
                 <Space size={16}>
                 <Badge  dot={true}>
                     <BellFilled/>
