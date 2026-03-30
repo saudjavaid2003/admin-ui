@@ -7,7 +7,8 @@ import Root from './layouts/Root';
 import Users from './pages/users/User';
 import Tenants from './pages/tenants/Tenants';
 import Products from './pages/products/Products';
-
+// 1. Import your Categories component
+// import Categories from './pages/categories/categoires'; 
 
 export const router = createBrowserRouter([
     {
@@ -30,11 +31,15 @@ export const router = createBrowserRouter([
                         path: '/restaurants',
                         element: <Tenants />,
                     },
-                       {
+                    {
                         path: '/products',
                         element: <Products />,
-                    }
-                  
+                    },
+                    // 2. Add the Categories route here
+                    // {
+                    //     path: '/categories',
+                    //     element: <Categories />,
+                    // }
                 ],
             },
             {

@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
-import { Navigate, NavLink, Outlet ,useLocation} from 'react-router-dom';
+import React, { useState } from 'react';
+import { Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store';
-// import { logout } from '../http/api';
-import {Flex, Layout, Menu,Badge, theme, Space, Avatar,Dropdown } from 'antd';
+import { Flex, Layout, Menu, Badge, theme, Space, Avatar, Dropdown } from 'antd';
 
 import Icon, { BellFilled } from '@ant-design/icons';
 import Logo from '../components/icons/logo';
@@ -11,11 +10,11 @@ import UserIcon from '../components/UserIcon';
 import { foodIcon } from '../components/icons/FoodIcon';
 import BasketIcon from '../components/icons/BasketIcon';
 import GiftIcon from '../components/icons/GiftIcon';
+import CategoryIcon from '../components/icons/CategoryIcon'; 
 import { useMutation } from '@tanstack/react-query';
 import { logout } from '../http/api';
 
 const { Sider, Header, Content, Footer } = Layout;
-
 
 const getMenuItems = (role: string) => {
     const baseItems = [
@@ -24,7 +23,11 @@ const getMenuItems = (role: string) => {
             icon: <Icon component={Home} />,
             label: <NavLink to="/">Home</NavLink>,
         },
-
+        {
+            key: '/categories',
+            icon: <Icon component={CategoryIcon} />,
+            label: <NavLink to="/categories">Categories</NavLink>,
+        },
         {
             key: '/products',
             icon: <Icon component={foodIcon} />,
@@ -44,11 +47,13 @@ const getMenuItems = (role: string) => {
 
     if (role === 'admin') {
         const menus = [...baseItems];
+        // Users at index 1
         menus.splice(1, 0, {
             key: '/users',
             icon: <Icon component={UserIcon} />,
             label: <NavLink to="/users">Users</NavLink>,
         });
+        // Restaurants at index 2
         menus.splice(2, 0, {
             key: '/restaurants',
             icon: <Icon component={foodIcon} />,
@@ -63,28 +68,24 @@ const getMenuItems = (role: string) => {
 
 const Dashboard = () => {
     const location = useLocation();
-    const { logout: logoutFromStore } = useAuthStore();
+    const { logout: logoutFromStore, user } = useAuthStore();
+    const [collapsed, setCollapsed] = useState(false);
+    const {
+        token: { colorBgContainer },
+    } = theme.useToken();
 
     const { mutate: logoutMutate } = useMutation({
         mutationKey: ['logout'],
         mutationFn: logout,
         onSuccess: async () => {
             logoutFromStore();
-            return;
         },
     });
-
-    const [collapsed, setCollapsed] = useState(false);
-    const {
-        token: { colorBgContainer },
-    } = theme.useToken();
-
-    // call getself
-    const { user } = useAuthStore();
 
     if (user === null) {
         return <Navigate to={`/auth/login?returnTo=${location.pathname}`} replace={true} />;
     }
+
     const items = getMenuItems(user.role);
 
     return (
@@ -95,13 +96,14 @@ const Dashboard = () => {
                     theme="light"
                     collapsed={collapsed}
                     onCollapse={(value) => setCollapsed(value)}>
-                    <div className="logo">
+                    <div className="logo" style={{ display: 'flex', justifyContent: 'center', padding: '16px' }}>
                         <Logo />
                     </div>
 
                     <Menu
                         theme="light"
-                        defaultSelectedKeys={[location.pathname]}
+                        // selectedKeys ensures the sidebar stays highlighted on the current route
+                        selectedKeys={[location.pathname]}
                         mode="inline"
                         items={items}
                     />
@@ -113,7 +115,7 @@ const Dashboard = () => {
                             paddingRight: '16px',
                             background: colorBgContainer,
                         }}>
-                        <Flex gap="middle" align="start" justify="space-between">
+                        <Flex gap="middle" align="center" justify="space-between" style={{ height: '100%' }}>
                             <Badge
                                 text={
                                     user.role === 'admin' ? 'You are an admin' : user.tenant?.name
@@ -122,7 +124,7 @@ const Dashboard = () => {
                             />
                             <Space size={16}>
                                 <Badge dot={true}>
-                                    <BellFilled />
+                                    <BellFilled style={{ fontSize: '18px', cursor: 'pointer' }} />
                                 </Badge>
                                 <Dropdown
                                     menu={{
@@ -139,14 +141,16 @@ const Dashboard = () => {
                                         style={{
                                             backgroundColor: '#fde3cf',
                                             color: '#f56a00',
+                                            cursor: 'pointer'
                                         }}>
-                                        U
+                                        {user.firstName?.charAt(0).toUpperCase() || 'U'}
                                     </Avatar>
                                 </Dropdown>
                             </Space>
                         </Flex>
                     </Header>
                     <Content style={{ margin: '24px' }}>
+                        {/* This renders the child components from your router */}
                         <Outlet />
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>Mernspace pizza shop</Footer>
