@@ -15,7 +15,7 @@ import {
 import { RightOutlined, PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import ProductsFilter from './ProductsFilter';
-import { FieldData, Product } from '../../types';
+import type { FieldData, Product } from '../../types';
 import React from 'react';
 import { PER_PAGE } from '../../constants';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -24,7 +24,7 @@ import { format } from 'date-fns';
 import { debounce } from 'lodash';
 import { useAuthStore } from '../../store';
 import ProductForm from './forms/ProductForm';
-import { makeFormData } from './helpers';
+import { makeFormData } from './Helpers';
 
 const columns = [
     {
@@ -76,8 +76,21 @@ const columns = [
 const Products = () => {
     const [filterForm] = Form.useForm();
     const [form] = Form.useForm();
+    const { user } = useAuthStore();
 
+    // --- FIX: Moved state declarations to the top of the component ---
+    const [drawerOpen, setDrawerOpen] = React.useState(false);
     const [selectedProduct, setCurrentProduct] = React.useState<Product | null>(null);
+    const [queryParams, setQueryParams] = React.useState({
+        limit: PER_PAGE,
+        page: 1,
+        tenantId: user!.role === 'manager' ? user?.tenant?.id : undefined,
+    });
+    
+    const {
+        token: { colorBgLayout },
+    } = theme.useToken();
+    // -----------------------------------------------------------------
 
     React.useEffect(() => {
         if (selectedProduct) {
@@ -116,19 +129,6 @@ const Products = () => {
             });
         }
     }, [selectedProduct, form]);
-
-    const { user } = useAuthStore();
-
-    const {
-        token: { colorBgLayout },
-    } = theme.useToken();
-    const [drawerOpen, setDrawerOpen] = React.useState(false);
-
-    const [queryParams, setQueryParams] = React.useState({
-        limit: PER_PAGE,
-        page: 1,
-        tenantId: user!.role === 'manager' ? user?.tenant?.id : undefined,
-    });
 
     const {
         data: products,
@@ -188,23 +188,6 @@ const Products = () => {
     });
 
     const onHandleSubmit = async () => {
-        // const dummy = {
-        //     Size: { priceType: 'base', availableOptions: { Small: 400, Medium: 600, Large: 800 } },
-        //     Crust: { priceType: 'aditional', availableOptions: { Thin: 50, Thick: 100 } },
-        // };
-
-        // const currentData = {
-        //     '{"configurationKey":"Size","priceType":"base"}': {
-        //         Small: 100,
-        //         Medium: 200,
-        //         Large: 400,
-        //     },
-        //     '{"configurationKey":"Crust","priceType":"aditional"}': {
-        //         Thin: 0,
-        //         Thick: 50,
-        //     },
-        // };
-
         await form.validateFields();
 
         const priceConfiguration = form.getFieldValue('priceConfiguration');
@@ -220,15 +203,6 @@ const Products = () => {
         }, {});
 
         const categoryId = form.getFieldValue('categoryId');
-        // const currentAttrs = {
-        //     isHit: 'No',
-        //     Spiciness: 'Less',
-        // };
-
-        // const attrs = [
-        //     { name: 'Is Hit', value: true },
-        //     { name: 'Spiciness', value: 'Hot' },
-        // ];
 
         const attributes = Object.entries(form.getFieldValue('attributes')).map(([key, value]) => {
             return {
@@ -306,7 +280,6 @@ const Products = () => {
                         pageSize: queryParams.limit,
                         current: queryParams.page,
                         onChange: (page) => {
-                            console.log(page);
                             setQueryParams((prev) => {
                                 return {
                                     ...prev,
@@ -315,7 +288,6 @@ const Products = () => {
                             });
                         },
                         showTotal: (total: number, range: number[]) => {
-                            console.log(total, range);
                             return `Showing ${range[0]}-${range[1]} of ${total} items`;
                         },
                     }}

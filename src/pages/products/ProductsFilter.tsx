@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Card, Col, Form, Input, Row, Select, Space, Switch, Typography } from 'antd';
 import { getCategories, getTenants } from '../../http/api';
-import { Category, Tenant } from '../../types';
+import type { Category, Tenant } from '../../types';
 import { useAuthStore } from '../../store';
 
 type ProductsFilterProps = {

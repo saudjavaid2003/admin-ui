@@ -1,6 +1,8 @@
-import { Card, Col, Form, FormInstance, Input, Row, Select, Space, Switch, Typography } from 'antd';
+import { Card, Col, Form, Input, Row, Select, Space, Switch, Typography} from 'antd';
 
-import { Category, Tenant } from '../../../types';
+import type { FormInstance } from 'antd/es/form/Form';
+
+import type  { Category, Tenant } from '../../../types';
 import { useQuery } from '@tanstack/react-query';
 import { getCategories, getTenants } from '../../../http/api';
 import Pricing from './Pricing';

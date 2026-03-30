@@ -1,4 +1,4 @@
-import { Form, message, Space, Typography, Upload, UploadProps } from 'antd';
+import { Form, message, Space, Typography, Upload, type  UploadProps } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 

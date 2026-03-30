@@ -1,5 +1,5 @@
 import { Card, Col, Form, InputNumber, Row, Space, Typography } from 'antd';
-import { Category } from '../../../types';
+import type { Category } from '../../../types';
 import { useQuery } from '@tanstack/react-query';
 import { getCategory } from '../../../http/api';
 

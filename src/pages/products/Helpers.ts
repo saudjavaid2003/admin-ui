@@ -1,4 +1,4 @@
-import { CreateProductData, ImageField } from '../../types';
+import type { CreateProductData, ImageField } from '../../types';
 
 export const makeFormData = (data: CreateProductData) => {
     const formData = new FormData();
