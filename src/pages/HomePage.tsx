@@ -97,7 +97,7 @@ function HomePage() {
                   title="Total sale"
                   value={70000}
                   precision={2}
-                  prefix="₹"
+                  prefix="Rs"
                 />
               </Card>
             </Col>
@@ -131,7 +131,7 @@ function HomePage() {
                     />
                     <Row style={{ flex: 1 }} justify="space-between">
                       <Col>
-                        <Text strong>₹{item.amount}</Text>
+                        <Text strong>Rs{item.amount}</Text>
                       </Col>
                       <Col>
                         <Tag color="volcano">{item.status}</Tag>
