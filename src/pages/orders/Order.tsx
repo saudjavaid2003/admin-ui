@@ -8,8 +8,8 @@ import { format } from 'date-fns';
 import { useAuthStore } from '../../store';
 import { colorMapping } from '../../constants';
 import { capitalizeFirst } from '../products/Helpers';
-
 import React from 'react';
+import socket from '../../lib/socket';   // ← added
 
 const columns = [
     {
@@ -64,11 +64,11 @@ const columns = [
         render: (_: boolean, record: Order) => {
             return (
                 <>
-                <Tag bordered={false} color={colorMapping[record.orderStatus]}>
+                    <Tag bordered={false} color={colorMapping[record.orderStatus]}>
                         {capitalizeFirst(record.orderStatus)}
                     </Tag>
                 </>
-            )
+            );
         },
     },
     {
@@ -101,6 +101,28 @@ const Orders = () => {
     const [queryParams, setQueryParams] = React.useState({
         tenantId: user!.role === 'manager' ? String(user?.tenant?.id) : undefined,
     });
+
+    // ← added from teacher
+    React.useEffect(() => {
+        if (user?.tenant) {
+            socket.on('order-update', (data) => {
+                console.log('data received: ', data);
+            });
+
+            socket.on('join', (data) => {
+                console.log('User joined in: ', data.roomId);
+            });
+
+            socket.emit('join', {
+                tenantId: user.tenant.id,
+            });
+        }
+
+        return () => {
+            socket.off('join');
+            socket.off('order-update');
+        };
+    }, []);
 
     const { data: restaurants } = useQuery({
         queryKey: ['restaurants'],
