@@ -43,7 +43,7 @@ const Pricing = ({ selectedCategory }: PricingProps) => {
                                                         }),
                                                         option,
                                                     ]}>
-                                                    <InputNumber addonAfter="₹" />
+                                                    <InputNumber addonAfter="Rs" />
                                                 </Form.Item>
                                             </Col>
                                         );

@@ -77,7 +77,7 @@ const columns = [
         dataIndex: 'total',
         key: 'total',
         render: (text: string) => {
-            return <Typography.Text>₹{text}</Typography.Text>;
+            return <Typography.Text>Rs{text}</Typography.Text>;
         },
     },
     {

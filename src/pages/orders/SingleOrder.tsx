@@ -173,7 +173,7 @@ const SingleOrder = () => {
 
                             <Flex style={{ flexDirection: 'column' }}>
                                 <Typography.Text type="secondary">Order Amount</Typography.Text>
-                                <Typography.Text>₹{order.total}</Typography.Text>
+                                <Typography.Text>Rs {order.total}</Typography.Text>
                             </Flex>
 
                             <Flex style={{ flexDirection: 'column' }}>
