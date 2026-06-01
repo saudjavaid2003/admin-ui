@@ -9,6 +9,7 @@ import Tenants from './pages/tenants/Tenants';
 import Products from './pages/products/Products';
 import Orders from './pages/orders/Order';
 import SingleOrder from './pages/orders/SingleOrder';
+import Promos from './pages/promos/Promo';
 
 export const router = createBrowserRouter([
     {
@@ -42,6 +43,10 @@ export const router = createBrowserRouter([
                     {
                         path: '/orders/:orderId',
                         element: <SingleOrder />,
+                    },
+                    {
+                        path: '/promos',
+                        element: <Promos />,
                     },
                 ],
             },

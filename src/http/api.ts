@@ -1,5 +1,8 @@
 import type { CreateTenantData, CreateUserData, Credentials, OrderStatus } from '../types';
 import { api } from './client';
+import type { CreateCouponData, VerifyCouponData } from '../types';
+
+const COUPON_SERVICE = '/api/order'; // coupons live in the order service
 
 export const AUTH_SERVICE = '/api/auth';
 const CATALOG_SERVICE = '/api/catalog';
@@ -40,3 +43,15 @@ export const getSingle = (orderId: string, queryString: string) =>
     api.get(`${ORDER_SERVICE}/orders/${orderId}?${queryString}`);
 export const changeStatus = (orderId: string, data: { status: OrderStatus }) =>
     api.patch(`${ORDER_SERVICE}/orders/change-status/${orderId}`, data);
+
+export const getCoupons = (queryString: string) =>
+    api.get(`${COUPON_SERVICE}/coupons?${queryString}`);
+
+export const createCoupon = (coupon: CreateCouponData) =>
+    api.post(`${COUPON_SERVICE}/coupons`, coupon);
+
+export const deleteCoupon = (id: string) =>
+    api.delete(`${COUPON_SERVICE}/coupons/${id}`);
+
+export const verifyCoupon = (data: VerifyCouponData) =>
+    api.post(`${COUPON_SERVICE}/coupons/verify`, data);
