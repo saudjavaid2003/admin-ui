@@ -37,6 +37,9 @@ import type { Coupon, CreateCouponData, VerifyCouponResponse } from '../../types
 
 const { Title, Text } = Typography;
 
+// Form uses Dayjs for the date picker; we convert to ISO string before sending to API
+type CreateCouponFormValues = Omit<CreateCouponData, 'validUpto'> & { validUpto: dayjs.Dayjs };
+
 const isExpired = (date: string) => dayjs().isAfter(dayjs(date));
 
 const Promos = () => {
@@ -50,7 +53,7 @@ const Promos = () => {
 
     // drawer state
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const [createForm] = Form.useForm<CreateCouponData>();
+    const [createForm] = Form.useForm<CreateCouponFormValues>();
 
     // verify modal state
     const [verifyOpen, setVerifyOpen] = useState(false);
@@ -114,7 +117,7 @@ const Promos = () => {
     });
 
     // ── handlers ──────────────────────────────────────────────────
-    const handleCreate = (values: CreateCouponData & { validUpto: dayjs.Dayjs }) => {
+    const handleCreate = (values: CreateCouponFormValues) => {
         const payload: CreateCouponData = {
             ...values,
             validUpto: values.validUpto.toISOString(),
